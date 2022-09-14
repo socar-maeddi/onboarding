@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-mysql
+  labels:
+    app: fastapi-app
+spec:
+  selector:
+    matchLabels:
+      app: fastapi-app
+      tier: mysql
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+        tier: mysql
+    spec:
+      containers:
+        - image: mysql:latest
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_USER
+              value: maeddi
+            - name: MYSQL_PASSWORD
+              value: maeddi
+            - name: MYSQL_DATABASE
+              value: fastapi_db
+          ports:
+            - containerPort: 3306
+              name: mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-mysql
+  labels:
+    app: fastapi-app
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: fastapi-app
+    tier: mysql
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-app
+  labels:
+    app: fastapi-app
+spec:
+  selector:
+    matchLabels:
+      app: fastapi-app
+      tier: api_server
+  template:
+    metadata:
+      labels:
+        app: fastapi-app
+        tier: api_server
+    spec:
+      containers:
+        - image: fastapi_app:latest
+          imagePullPolicy: Never
+          name: fastapi-app
+          ports:
+            - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-app
+  labels:
+    app: fastapi-app
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      nodePort: 30000
+  selector:
+    app: fastapi-app
+    tier: api_server
