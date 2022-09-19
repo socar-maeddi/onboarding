@@ -1,0 +1,58 @@
+
+fastapi:
+  name: fastapi-app
+
+  labels:
+    tier: api_server
+  
+  image:
+    repository: fastapi_app
+    tag: latest
+    pullPoicy: Never
+    
+  ports:
+    containerPort: 8000
+  
+  service:
+    type: NodePort
+    ports:
+      port: 8000
+      nodePort: 30000
+
+
+mysql:
+  name: fastapi-mysql
+
+  labels:
+    tier: mysql
+
+  image:
+    repository: mysql
+    tag: latest
+    pullPoicy: Never
+
+  env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: root
+    - name: MYSQL_USER
+      value: maeddi
+    - name: MYSQL_PASSWORD
+      value: maeddi
+    - name: MYSQL_DATABASE
+      value: fastapi_db
+
+  ports:
+    containerPort: 3306
+  
+  service:
+    type: ClusterIP
+    ports:
+      port: 3306
+
+
+ingress:
+  enabled: false
+
+
+labels:
+  app: fastapi-app
