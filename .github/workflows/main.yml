@@ -21,8 +21,9 @@ jobs:
           credentials_json: ${{ secrets.GCR_JSON_KEY }}
       
       - name: Build docker image
-        run: |-
-            docker build -t grc.io/socar-dev/maeddi-server:latest ~/onboarding/gke_dev/.
+        run: |
+          docker build -t grc.io/socar-dev/maeddi-server:latest ~/onboarding/gke_dev/.
       
       - name: Publish
-            docker push grc.io/socar-dev/maeddi-server:latest
+        run: |
+          docker push grc.io/socar-dev/maeddi-server:latest
