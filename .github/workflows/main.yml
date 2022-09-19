@@ -22,7 +22,7 @@ jobs:
       
       - name: Build docker image
         run: |
-          docker build -t grc.io/socar-dev/maeddi-server:latest ~/onboarding/gke_dev/.
+          docker build -t grc.io/socar-dev/maeddi-server:latest onboarding/gke_dev/Dockerfile
       
       - name: Publish
         run: |
