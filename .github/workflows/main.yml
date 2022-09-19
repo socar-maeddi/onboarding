@@ -19,5 +19,5 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: gcr.io
-          username: _json_key
+          username: ${{ secrets.GCR_JSON_KEY }}
           password: ${{ secrets.GCR_JSON_KEY }}
