@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.mysql.name }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+      tier: {{ .Values.mysql.labels.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+        tier: {{ .Values.mysql.labels.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.mysql.name }}
+          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
+          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          env:
+            {{- range .Values.mysql.env }}
+              - name: {{ .name }}
+                value: {{ .value }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.mysql.ports.containerPort }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fastapi.name }}
+  labels:
+    app: {{ .Values.labels.app }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.labels.app }}
+      tier: {{ .Values.fastapi.labels.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.labels.app }}
+        tier: {{ .Values.fastapi.labels.tier }}
+    spec:
+      containers:
+        - name: {{ .Values.fastapi.name }}
+          image: "{{ .Values.fastapi.image.repository }}:{{ .Values.fastapi.image.tag }}"
+          imagePullPolicy: {{ .Values.fastapi.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.fastapi.ports.containerPort }}

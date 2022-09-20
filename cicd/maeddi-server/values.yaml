@@ -1,0 +1,58 @@
+
+fastapi:
+  name: maeddi-server-api
+
+  labels:
+    tier: api_server
+
+  image:
+    repository: gcr.io/socar-data-dev/maeddi-server
+    tag: v1
+    pullPoicy: Always
+
+  ports:
+    containerPort: 8000
+
+  service:
+    type: NodePort
+    ports:
+      port: 8000
+      nodePort: 30000
+
+
+mysql:
+  name: maeddi-server-mysql
+
+  labels:
+    tier: mysql
+
+  image:
+    repository: mysql
+    tag: latest
+    pullPoicy: Always
+
+  env:
+    - name: MYSQL_ROOT_PASSWORD
+      value: root
+    - name: MYSQL_USER
+      value: maeddi
+    - name: MYSQL_PASSWORD
+      value: maeddi
+    - name: MYSQL_DATABASE
+      value: fastapi_db
+
+  ports:
+    containerPort: 3306
+
+  service:
+    type: ClusterIP
+    ports:
+      port: 3306
+
+
+ingress:
+  enabled: false
+
+
+labels:
+  app: maeddi-server-app
